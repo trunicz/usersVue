@@ -7,10 +7,18 @@
   <title>
     datos
   </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   <style type="text/css">
+    button {
+      border: 1px solid rgba(0, 0, 0, 0);
+      margin: 0 10px;
+    }
+
     table,
     th,
-    td {
+    td,
+    button:hover {
       border: 1px solid black;
     }
   </style>
@@ -24,14 +32,14 @@
       Bienvenido {{ user }}
     </h1>
 
-    <button @click="onAction = (onAction)?false:true">
+    <button @click="render = false">
       Añadir usuario
     </button>
-    <button @click="isShow = !isShow"> Mostrar Usuarios</button>
+    <button @click="render = true">Mostrar Usuarios</button>
 
     <br>
 
-    <table v-show="isShow" v-if="onAction == false">
+    <table v-if="render">
       <thead>
         <tr>
           <th>
@@ -122,19 +130,43 @@
       <form>
         <fieldset>
           <legend>
-            Datos personales
+            Nuevo Usuario
           </legend>
 
           <label>
-            dato uno
+            Name
           </label>
-          <input type="text" name="">
+          <input type="text" v-model="name" name="name">
 
+          <label>
+            Username
+          </label>
+          <input type="text" v-model="username" name="username">
 
-          <button>
+          <label>
+            email
+          </label>
+          <input type="text" v-model="email" name="email">
+
+          <label>
+            phone
+          </label>
+          <input type="text" v-model="phone" name="phone">
+
+          <label>
+            website
+          </label>
+          <input type="text" v-model="website" name="website">
+
+          <label>
+            Password
+          </label>
+          <input type="text" v-model="password" name="password">
+
+          <button @click="insert" v-on:click="render = !render">
             Guardar
           </button>
-          <button>
+          <button @click="render = !render">
             Cancelar
           </button>
         </fieldset>
@@ -152,12 +184,29 @@
         return {
           user: '',
           users: null,
-          onAction: false,
-          isShow: false
+          render: true,
+          name: null,
+          username: null,
+          email: null,
+          phone: null,
+          website: null,
+          password: null
         }
       },
       methods: {
-
+        insert(e) {
+          e.preventDefault()
+          const newUser = {
+            id: this.users.length + 1,
+            name: this.name,
+            username: this.username,
+            email: this.email,
+            phone: this.phone,
+            website: this.website,
+            password: this.password
+          }
+          this.users.push(newUser)
+        }
       },
       mounted() {
 
