@@ -59,30 +59,33 @@
       },
       methods: {
         login(e) {
-
           var tmp_mail = this.email
           var tmp_pwd = this.password
 
-          e.preventDefault()
-
           var access = this.users.map(function (u) {
 
-            if (tmp_mail === u.email && tmp_pwd === u.password) {
-              var tmp_usr = {
-                name: u.name,
-                username: u.username,
-                email: u.email
+            if (tmp_mail === u.email) {
+              if (tmp_pwd === u.password) {
+
+                var tmp_usr = {
+                  name: u.name,
+                  username: u.username,
+                  email: u.email
+                }
+
+                localStorage.setItem('user', JSON.stringify(tmp_usr));
+
+                alert("Accesos correctos")
+
+                window.location.href = 'users.html'
+
               }
-
-              localStorage.setItem('user', JSON.stringify(tmp_usr));
-
-              alert("Accesos correctos")
-
-              window.location.href = 'users.html'
-              return true
             }
-            alert('Datos incorrectos')
           })
+
+          alert('Datos incorrectos')
+
+          e.preventDefault()
         }
       },
       mounted() {
