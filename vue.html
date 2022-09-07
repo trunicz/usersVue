@@ -1,111 +1,96 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>
-			Canvas
-		</title>
-	</head>
-	<body>
 
-		<div id="contenedor">
-			
-			<form>
-				<fieldset>
-					<legend>
-						Datos de acceso
-					</legend>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>
+    Canvas
+  </title>
+</head>
+
+<body>
+
+  <div id="contenedor">
+
+    <form>
+      <fieldset>
+        <legend>
+          Datos de acceso
+        </legend>
 
 
-					<label>
-						Correo electrónico 
-					</label>
-					<input type="email" v-model="email" name="" required>
+        <label>
+          Correo electrónico
+        </label>
+        <input type="email" v-model="email" name="" required>
 
-					<br>
+        <br>
 
-					<label>
-						Password
-					</label>
-					<input type="password" v-model="password" name="" required>
+        <label>
+          Password
+        </label>
+        <input type="password" v-model="password" name="" required>
 
-					<br>
+        <br>
 
-					<button @click="login">
-						Acceder
-					</button>
+        <button @click="login">
+          Acceder
+        </button>
 
-				</fieldset>
-			</form>
+      </fieldset>
+    </form>
 
-		</div>
+  </div>
 
-		<script src="https://unpkg.com/vue@3"></script>
-		<script type="text/javascript">
-			const { createApp } = Vue
+  <script src="https://unpkg.com/vue@3"></script>
+  <script type="text/javascript">
+    const { createApp } = Vue
 
-			const app = createApp({
-				data(){
-					return{ 
-						users:null,
-						email:'',
-						password:''
-					}
-				},
-				methods:{
-					login(e){
+    const app = createApp({
+      data() {
+        return {
+          users: null,
+          email: '',
+          password: ''
+        }
+      },
+      methods: {
+        login(e) {
 
-						var tmp_mail = this.email
-						var tmp_pwd = this.password
-						
-						var access = this.users.map(function(u){
+          var tmp_mail = this.email
+          var tmp_pwd = this.password
 
-							if (tmp_mail === u.email) {
-								if (tmp_pwd === u.password) {
-									
-									var tmp_usr = { 
-										name: u.name,
-										username: u.username,
-										email: u.email
-									}  
+          var access = this.users.map(function (u) {
 
-									localStorage.setItem('user', JSON.stringify(tmp_usr));
+            if (tmp_mail === u.email && tmp_pwd === u.password) {
+              var tmp_usr = {
+                name: u.name,
+                username: u.username,
+                email: u.email
+              }
 
-									alert("Accesos correctos")
+              localStorage.setItem('user', JSON.stringify(tmp_usr));
 
-									window.location.href = 'users.html'
-									
-								}
-							}
-						}) 
+              alert("Accesos correctos")
 
-						alert('Datos incorrectos')
+              window.location.href = 'users.html'
+            } else {
+              alert('Datos incorrectos')
+            }
+          })
+          e.preventDefault()
+        }
+      },
+      mounted() {
+        fetch('data/users.json')
+          .then((res) => res.json())
+          .then((json) => (this.users = json))
+          .catch((err) => (alert('no data')))
+      }
+    }).mount('#contenedor')
 
-						e.preventDefault()
-					}
-				},
-				mounted(){
-					fetch('data/users.json')
-					.then((res) => res.json())
-					.then((json) => ( this.users = json ))
-					.catch((err) => ( alert('no data') ))
-				}
-			}).mount('#contenedor')
+  </script>
+</body>
 
-		</script>
-	</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
