@@ -39,7 +39,7 @@
 
     <br>
 
-    <table v-if="render">
+    <table v-if="render" class="container-fluid">
       <thead>
         <tr>
           <th>
@@ -88,12 +88,14 @@
             {{ u.website }}
           </th>
           <th>
-            <button>
-              Edit
-            </button>
-            <button>
-              Delete
-            </button>
+            <div class="d-grid gap-2">
+              <button class="btn btn-success" @click="set(u)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Edit
+              </button>
+              <button class="btn btn-danger" v-on:click.prevent="deleteElement(u)">
+                Delete
+              </button>
+            </div>
           </th>
         </tr>
 
@@ -133,49 +135,108 @@
             Nuevo Usuario
           </legend>
 
-          <label>
+          <label class="form-label">
             Name
           </label>
-          <input type="text" v-model="name" name="name">
+          <input class="form-control" type="text" v-model="name" name="name">
 
-          <label>
+          <label class="form-label">
             Username
           </label>
-          <input type="text" v-model="username" name="username">
+          <input class="form-control" type="text" v-model="username" name="username">
 
-          <label>
+          <label class="form-label">
             email
           </label>
-          <input type="text" v-model="email" name="email">
+          <input class="form-control" type="text" v-model="email" name="email">
 
-          <label>
+          <label class="form-label">
             phone
           </label>
-          <input type="text" v-model="phone" name="phone">
+          <input class="form-control" type="text" v-model="phone" name="phone">
 
-          <label>
+          <label class="form-label">
             website
           </label>
-          <input type="text" v-model="website" name="website">
+          <input class="form-control" type="text" v-model="website" name="website">
 
-          <label>
+          <label class="form-label">
             Password
           </label>
-          <input type="text" v-model="password" name="password">
+          <input class="form-control" type="text" v-model="password" name="password">
 
           <button @click="insert" v-on:click="render = !render">
             Guardar
           </button>
-          <button @click="render = !render">
+          <button @click="clear()" @click="render = !render">
             Cancelar
           </button>
         </fieldset>
       </form>
     </div>
 
+    <!-- Button trigger modal -->
+    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Launch demo modal
+    </button> -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label class="form-label">
+              Name
+            </label>
+            <input class="form-control" type="text" v-model="name">
+
+            <label class="form-label">
+              Username
+            </label>
+            <input class="form-control" type="text" v-model="username">
+
+            <label class="form-label">
+              email
+            </label>
+            <input class="form-control" type="text" v-model="email">
+
+            <label class="form-label">
+              phone
+            </label>
+            <input class="form-control" type="text" v-model="phone">
+
+            <label class="form-label">
+              website
+            </label>
+            <input class="form-control" type="text" v-model="website">
+
+            <label class="form-label">
+              Password
+            </label>
+            <input class="form-control" type="text" v-model="password">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="clear()" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" @click="edit(element)" data-bs-dismiss="modal">Save
+              changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script src="https://unpkg.com/vue@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+    crossorigin="anonymous"></script>
   <script type="text/javascript">
     const { createApp } = Vue
 
@@ -190,10 +251,24 @@
           email: null,
           phone: null,
           website: null,
-          password: null
+          password: null,
+          btnLetter: 'Edit',
+          editable: false,
+          element: null
         }
       },
       methods: {
+        deleteElement(e) {
+          this.users = this.users.filter(y => { return y != e })
+        },
+        clear() {
+          name = ''
+          username = ''
+          email = ''
+          phone = ''
+          website = ''
+          password = ''
+        },
         insert(e) {
           e.preventDefault()
           const newUser = {
@@ -206,6 +281,24 @@
             password: this.password
           }
           this.users.push(newUser)
+        },
+        set(e) {
+          this.element = e
+        },
+        edit(e) {
+          this.users = this.users.map(o => {
+            const newUser = {
+              id: o.id,
+              name: this.name,
+              username: this.username,
+              email: this.email,
+              phone: this.phone,
+              website: this.website,
+              password: this.password
+            }
+            if (o.id === e.id) o = newUser
+            return o
+          })
         }
       },
       mounted() {
